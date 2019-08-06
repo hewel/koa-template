@@ -14,7 +14,7 @@ export default {
     file: "build/server/server.js",
     format: "cjs",
   },
-  external: ["koa"],
+  external: ["koa", "koa-router", "koa-bodyparser"],
   plugins: [
     eslint({
       fix: true,
