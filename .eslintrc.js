@@ -21,7 +21,7 @@ module.exports = {
         semi: 'off',
         'linebreak-style': 'off',
         'import/no-unresolved': [2, { ignore: [`U|utils.*`] }],
-        'import/extensions': [2, 'never', { jsx: 'always' }],
+        'import/extensions': [2, 'never', { jsx: 'always', json: 'always' }],
     },
     overrides: [
         {

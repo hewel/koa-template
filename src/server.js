@@ -8,13 +8,12 @@ const router = new Router()
 const name = 'World'
 
 app.use(bodyParser())
-
 // app.use(async ctx => {
 //     ctx.body = await `Hello ${name}!`
 // })
 
 router.get('/test', async ctx => {
-    ctx.body = await 'test page'
+    ctx.body = await `Hello ${name}!`
 })
 
 app.use(router.routes()).use(router.allowedMethods())
