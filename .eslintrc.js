@@ -22,6 +22,7 @@ module.exports = {
         'linebreak-style': 'off',
         'import/no-unresolved': [2, { ignore: [`U|utils.*`] }],
         'import/extensions': [2, 'never', { jsx: 'always', json: 'always' }],
+        'no-unused-vars': ['warn', { args: 'after-used' }],
     },
     overrides: [
         {

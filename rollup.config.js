@@ -14,6 +14,7 @@ export default {
     file: "build/server/server.js",
     format: "cjs",
     preferConst: true,
+    strict: false,
   },
   external: Object.keys(pkg.dependencies).concat(
     require("module").builtinModules || Object.keys(process.binding("natives"))
@@ -21,7 +22,7 @@ export default {
   plugins: [
     eslint({
       fix: true,
-      throwOnError: true,
+      throwOnError: !isDev,
       include: "src/*",
     }),
     commonjs({

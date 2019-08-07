@@ -8,6 +8,9 @@
     "dev": "rollup -c -w"
   },
   "devDependencies": {
+    "@types/koa": "^2.0.49",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-router": "^7.0.42",
     "eslint": "^6.1.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "^2.18.2",
@@ -25,6 +28,9 @@
   "dependencies": {
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
-    "koa-router": "^7.4.0"
+    "koa-router": "^7.4.0",
+    "pg": "^7.12.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.12.3"
   }
 }
