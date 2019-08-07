@@ -22,6 +22,31 @@ sequelize
 //     ctx.body = await `Hello ${name}!`
 // })
 
+const Model = Sequelize.Model
+
+class User extends Model {}
+User.init(
+    {
+        uid: {
+            type: Sequelize.INET,
+            allowNull: false,
+        },
+        name: {
+            type: Sequelize.CHAR,
+            allowNull: false,
+        },
+    },
+    {
+        sequelize,
+        modelName: 'user_name',
+    }
+)
+console.log(
+    User.findAll({
+        attributes: ['uid', 'name'],
+    })
+)
+
 router.get('/', async (ctx, next) => {
     ctx.body = ctx
     if (ctx.request.accepts('html')) {
