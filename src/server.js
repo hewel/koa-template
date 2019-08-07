@@ -1,11 +1,23 @@
 import Koa from 'koa'
 import Router from 'koa-router'
 import bodyParser from 'koa-bodyparser'
-// import Sequelize from 'sequelize'
+import Sequelize from 'sequelize'
 
 const app = new Koa()
 const router = new Router()
-// const sequelize = new Sequelize('postgres', '')
+const sequelize = new Sequelize('postgres', 'postgres', 'xiaozei', {
+    host: 'localhost',
+    dialect: 'postgres',
+})
+
+sequelize
+    .authenticate()
+    .then(() => {
+        console.log('Connection has been established successfully.')
+    })
+    .catch(err => {
+        console.error('Unable to connect to the database:', err)
+    })
 // app.use(async ctx => {
 //     ctx.body = await `Hello ${name}!`
 // })
