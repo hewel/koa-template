@@ -2,6 +2,7 @@ import Koa from 'koa'
 import Router from 'koa-router'
 import bodyParser from 'koa-bodyparser'
 import Sequelize from 'sequelize'
+import { ApolloServer, gql } from 'apollo-server-koa'
 
 const app = new Koa()
 const router = new Router()
@@ -44,32 +45,6 @@ User.init(
         timestamps: true,
     }
 )
-// User.sync()
-
-const Model = Sequelize.Model
-
-class User extends Model {}
-User.init(
-    {
-        uid: {
-            type: Sequelize.INET,
-            allowNull: false,
-        },
-        name: {
-            type: Sequelize.CHAR,
-            allowNull: false,
-        },
-    },
-    {
-        sequelize,
-        modelName: 'user_name',
-    }
-)
-console.log(
-    User.findAll({
-        attributes: ['uid', 'name'],
-    })
-)
 
 router.get('/', async (ctx, next) => {
     ctx.body = ctx
@@ -93,28 +68,72 @@ router
     .post('/test/:id', ctx => {
         const { id } = ctx.request
         const { uid = null } = ctx.query
-        if (id) {
+        try {
             User.create({
                 UserId: uid,
                 UserName: `Droid NO.${uid}`,
                 UserAge: id * uid,
             })
             ctx.body = {
-                code: 0,
+                code: 1,
                 data: {
                     UserId: uid,
                     UserName: `Droid NO.${uid}`,
                     UserAge: id * uid,
                 },
             }
-        } else {
-            ctx.body = ctx.request.body
+        } catch (error) {
+            ctx.body = {
+                code: 0,
+                data: {},
+                error,
+            }
         }
     })
 
+router.get('/find', async (ctx, next) => {
+    const dataList = await User.findAll()
+    const data = {
+        list: dataList,
+    }
+    ctx.body = data
+    await next()
+})
+
+const typeDefs = gql`
+    type User {
+        id: Int
+        UserName: String
+        UserAge: Int
+    }
+    type Query {
+        Users: [User]
+    }
+`
+const resolvers = {
+    Query: {
+        Users: async () => await User.findAll(),
+    },
+}
+
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+})
+
+server.applyMiddleware({ app })
+
+app.use(async (ctx, next) => {
+    try {
+        await User.sync()
+        await next()
+    } catch (error) {
+        console.log(error)
+    }
+})
 app.use(bodyParser())
 app.use(router.routes()).use(router.allowedMethods())
 
-app.listen(4545)
-
-console.log('http://127.0.0.1:4545')
+app.listen(4545, () => {
+    console.log(`🚀 Server ready at http://localhost:4545${server.graphqlPath}`)
+})
