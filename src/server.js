@@ -8,6 +8,7 @@ const router = new Router()
 const sequelize = new Sequelize('postgres', 'postgres', 'xiaozei', {
     host: 'localhost',
     dialect: 'postgres',
+    timestamps: false,
 })
 
 sequelize
@@ -18,9 +19,32 @@ sequelize
     .catch(err => {
         console.error('Unable to connect to the database:', err)
     })
-// app.use(async ctx => {
-//     ctx.body = await `Hello ${name}!`
-// })
+
+const Model = Sequelize.Model
+
+class User extends Model {}
+User.init(
+    {
+        UserId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+        UserName: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        UserAge: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+        },
+    },
+    {
+        sequelize,
+        modelName: 'User',
+        timestamps: true,
+    }
+)
+// User.sync()
 
 const Model = Sequelize.Model
 
@@ -70,10 +94,18 @@ router
         const { id } = ctx.request
         const { uid = null } = ctx.query
         if (id) {
+            User.create({
+                UserId: uid,
+                UserName: `Droid NO.${uid}`,
+                UserAge: id * uid,
+            })
             ctx.body = {
-                uid,
-                id,
-                name: `I'm Droid NO.${id * uid}`,
+                code: 0,
+                data: {
+                    UserId: uid,
+                    UserName: `Droid NO.${uid}`,
+                    UserAge: id * uid,
+                },
             }
         } else {
             ctx.body = ctx.request.body
