@@ -102,17 +102,25 @@ router.get('/find', async (ctx, next) => {
 
 const typeDefs = gql`
     type User {
-        id: Int
+        id: ID
+        UserId: Int
         UserName: String
         UserAge: Int
     }
     type Query {
         Users: [User]
+        User(id: ID! = 0): User
     }
 `
 const resolvers = {
     Query: {
         Users: async () => await User.findAll(),
+        User: async (_parent, { id }) =>
+            await User.findOne({
+                where: {
+                    id: id,
+                },
+            }),
     },
 }
 
@@ -120,7 +128,7 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
 })
-
+app.use(bodyParser())
 server.applyMiddleware({ app })
 
 app.use(async (ctx, next) => {
@@ -131,7 +139,6 @@ app.use(async (ctx, next) => {
         console.log(error)
     }
 })
-app.use(bodyParser())
 app.use(router.routes()).use(router.allowedMethods())
 
 app.listen(4545, () => {
