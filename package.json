@@ -27,7 +27,7 @@
     "rollup-plugin-uglify": "^6.0.2"
   },
   "dependencies": {
-    "apollo-server-koa": "^2.8.1",
+    "apollo-server-koa": "^2.14.2",
     "graphql": "^14.4.2",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
